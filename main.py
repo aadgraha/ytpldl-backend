@@ -21,10 +21,10 @@ def download(url: str, mode: str = "single_audio"):
     if mode == "single_audio":
         command = [
             "yt-dlp",
-            "-f", "bestaudio[ext=m4a]/bestaudio",
-            "--write-thumbnail",
-            "--convert-thumbnails", "jpg",
-            "--embed-thumbnail",
+            "--extract-audio",
+            "--audio-format", "m4a",
+            "--audio-quality", "0",
+            "--embed-thumbnail", 
             "--add-metadata",
             "--no-playlist",
             "-o", os.path.join(folder_path, "%(title)s.%(ext)s"),
@@ -44,14 +44,16 @@ def download(url: str, mode: str = "single_audio"):
         ]
 
     elif mode == "playlist_audio":
-        command = [
+        command = command = [
             "yt-dlp",
-            "-f", "bestaudio[ext=m4a]/bestaudio",
-            "--write-thumbnail",
-            "--convert-thumbnails", "jpg",
-            "--embed-thumbnail",
+            "--extract-audio",
+            "--audio-format", "m4a",
+            "--audio-quality", "0",
+            "--embed-thumbnail", 
             "--add-metadata",
-            "-o", os.path.join(folder_path, "%(playlist_index)s-%(title)s.%(ext)s"),
+            "--yes-playlist",
+            "--ignore-errors",
+            "-o", os.path.join(folder_path, "%(title)s.%(ext)s"),
             "--restrict-filenames",
             url
         ]
@@ -61,7 +63,7 @@ def download(url: str, mode: str = "single_audio"):
             "yt-dlp",
             "-f", "bv*[ext=mp4]+ba[ext=m4a]/mp4",
             "--merge-output-format", "mp4",
-            "-o", os.path.join(folder_path, "%(playlist_index)s-%(title)s.%(ext)s"),
+            "-o", os.path.join(folder_path, "%(title)s.%(ext)s"),
             "--restrict-filenames",
             url
         ]
@@ -80,15 +82,9 @@ def download(url: str, mode: str = "single_audio"):
         if f.endswith(".mp4") or f.endswith(".m4a")
     ])
 
-    thumbnails = sorted([
-        f for f in os.listdir(folder_path)
-        if f.endswith(".jpg")
-    ])
-
     return {
         "folder": folder_id,
         "files": files,
-        "thumbnails": thumbnails
     }
 
 
